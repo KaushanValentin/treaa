@@ -1,0 +1,87 @@
+<div class="calculator">
+  <div class="output"></div>
+  <div class="buttons">
+    <button class="clear">C</button>
+    <button class="operator">/</button>
+    <button>7</button>
+    <button>8</button>
+    <button>9</button>
+    <button class="operator">*</button>
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+    <button class="operator">-</button>
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button class="operator">+</button>
+    <button>0</button>
+    <button>.</button>
+    <button
+</div>
+</div>
+</div>
+
+// функция, которая выполняет математические операции
+function calculate(operator, num1, num2) {
+  let result = 0;
+  switch (operator) {
+    case "+":
+      result = num1 + num2;
+      break;
+    case "-":
+      result = num1 - num2;
+      break;
+    case "*":
+      result = num1 * num2;
+      break;
+    case "/":
+      result = num1 / num2;
+      break;
+    default:
+      result = "Некорректный оператор";
+  }
+  return result;
+}
+
+// получаем кнопки и поле вывода
+const buttons = document.querySelectorAll("button");
+const output = document.querySelector(".output");
+
+// обрабатываем нажатие на кнопку
+buttons.forEach(function(button) {
+  button.addEventListener("click", function() {
+    if (button.classList.contains("operator")) {
+      // получаем выбранный оператор
+      const operator = button.innerText;
+      // получаем значения из поля вывода
+      const num1 = parseFloat(output.innerText);
+      // очищаем поле вывода
+      output.innerText = "";
+      // устанавливаем атрибут data-operator на кнопку оператора
+      button.setAttribute("data-operator", "true");
+      // устанавливаем атрибут data-num1 на поле вывода
+      output.setAttribute("data-num1", num1);
+    } else if (button.classList.contains("equal")) {
+      // получаем выбранный оператор и значения из полей вывода
+      const operator = document.querySelector("[data-operator='true']").innerText;
+      const num1 = parseFloat(output.getAttribute("data-num1"));
+      const num2 = parseFloat(output.innerText);
+      // вычисляем результат и выводим его в поле
+      const result = calculate(operator, num1, num2);
+      output.innerText = result;
+      // снимаем атрибуты data-operator и data-num1
+      document.querySelector("[data-operator='true']").removeAttribute("data-operator");
+      output.removeAttribute("data-num1");
+    } else if (button.classList.contains("clear")) {
+      // очищаем поле вывода
+      output.innerText = "";
+      // снимаем атрибуты data-operator и data-num1
+      document.querySelector("[data-operator='true']").removeAttribute("data-operator");
+      output.removeAttribute("data-num1");
+    } else {
+      // добавляем цифру в поле вывода
+      output.innerText += button.innerText;
+    }
+  });
+});
